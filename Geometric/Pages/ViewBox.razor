@@ -1,0 +1,208 @@
+﻿@page  "/ViewBox"
+
+<!-- Greeting Message -->       
+<TopBanner BannerTxt = "SVG Geometric  Figures">This model will be used to to show ZOOM</TopBanner>
+    
+<div class="row m-1 " style="background-color:azure;">
+    <div class="col-4 m0"  style="border:solid 1px red;border-color:cadetblue;" >
+        <h4>Main Area</h4>
+        <div>
+            <div class="form-group m0">
+                <label style="font-size:12px;margin-bottom:0;margin-top:1px">Width</label>
+                <input type="range" min="1" max="@InitialWidth" step="1" style="width:100%" 
+                       value="@svgWidth" @oninput="@(args => SvgWidth( Convert.ToInt32(args.Value )))"/>                     
+                <input type="number" step="10" style="background-color:azure;border:none" @bind-value=@svgWidth />
+            </div>
+
+            <div class="form-group m0">
+                <label style="font-size:12px;margin-bottom:0;margin-top:1px">Height</label>                     
+                <input type="range" min="1" max="@InitialHeight" step="1" style="width:100%" 
+                       value="@svgHeight" @oninput="@(args => SvgHeight( Convert.ToInt32(args.Value )))"/>  
+                <input type="number" step="10" style="background-color:azure;border:none" @bind-value=@svgHeight />
+            </div>
+        </div>
+    </div>
+
+    <div class="col-4 m0" style="border:solid 1px red;border-color:cadetblue">
+        <h4>View Start (viewbox upper left corner position)</h4>            
+        <div class="form-group m0">
+            <label style="font-size:12px;margin-bottom:0;margin-top:1px">Left (x)</label>
+            <input type="range" min="@(-svgWidth)" max="@svgWidth" step="1" style="width:100%" 
+                    value="@viewX" @oninput="@(args => ViewX( Convert.ToInt32(args.Value )))"/>                                        
+            <input type="number" step="10" style="background-color:azure;border:none" @bind-value=@viewX />
+        </div>
+
+        <div class="form-group m0">
+            <label style="font-size:12px;margin-bottom:0;margin-top:1px">Top (y)</label>                    
+            <input type="range" min="@(-svgHeight)" max="@svgHeight" step="1" style="width:100%" 
+                    value="@viewY" @oninput="@(args => ViewY( Convert.ToInt32(args.Value )))"/>                        
+            <input type="number" step="10" style="background-color:azure;border:none" @bind-value=@viewY />
+        </div>          
+    </div>
+
+    <div class="col-4 m0" style="border:solid 1px red;border-color:cadetblue">
+        <h4>Scale (viewbox grow/shrink)</h4>   
+        <div class="form-group m0">
+            <label style="font-size:12px;margin-bottom:0;margin-top:1px">Width</label>
+            <input type="range" min="1" max="@( 2 * svgWidth)" step="1" style="width:100%"   
+                    value="@viewWidth" @oninput="@(args => ViewWidth( Convert.ToInt32(args.Value )))"/>                           
+            <input type="number" step="10" style="background-color:azure;border:none" @bind-value=@viewWidth/>
+            <div class="form-group float-end">                    
+                <span class="text-center"> Center View Box </span>
+                <input type="checkbox" @onchange="@(eventArgs => CenterViewBoxClicked( Convert.ToBoolean(eventArgs.Value)))" />                    
+            </div>
+        </div>
+
+        <div class="form-group m0">
+            <label style="font-size:12px;margin-bottom:0;margin-top:1px">Height</label>                    
+            <input type="range" min="1" max="@( 2 * svgHeight)" step="1" style="width:100%"  
+                    value="@viewHeight" @oninput="@((args) => ViewHeight( Convert.ToInt32(args.Value )))"/>    
+            <input type="number" step="10" style="background-color:azure;border:none" @bind-value=@viewHeight />
+            <div class="form-group float-end">                    
+                <span class="text-center"> Preservar a Proporção </span>
+                <input type="checkbox" @onchange="@(eventArgs => KeepProportionClicked( Convert.ToBoolean(eventArgs.Value)))" />                    
+            </div>                       
+        </div>  
+    </div>       
+</div>
+
+<div class="row m-1">
+    <div class="col-12 m-0 p-0" style="border:solid 5px red;border-color:cadetblue">
+        <!-- Set viewport and viewbox locations -->  
+        <!-- Attention Bootstrap users: non percentual #width# values may mess up #Bootstrap# behavior -->
+        <svg x=0 y=0 width="@svgWidthPct" height="@svgHeight"        
+                viewBox="@viewX @viewY @viewWidth @viewHeight"                                
+                style="border:solid 1px red;border-color:red" 
+                preserveAspectRatio="@preservRatio" >
+
+            <!-- 50 circles random colors, radius and locations-->
+            @for (int i = 0; i < 50; i++)
+            {
+                <circle cx="@arrCx[i]" cy="@arrCy[i]" r="@arrRx[i]" stroke="black" stroke-width="3" fill="@arrCo[i]" />                 
+            }    
+            <!-- Two rectangles to spot the viewbox location-->            
+            <rect x=0 y=0 width="10" height="10" style="fill:rgb(0,25,255);stroke-width:0;stroke:rgb(0,255,0)"/>
+            <rect x="@(svgWidth - 10)" y="@(svgHeight - 10)" width="10" height="10" style="fill:rgb(0,25,255);stroke-width:0;stroke:rgb(0,255,0)"/>
+
+        </svg>
+    </div>
+</div>       
+
+<!-- Style -->
+<style>
+    .h20{
+    height: 20%;
+    background-color: azure;
+    color: black;
+    }
+    .h70{
+    height: 70%;
+    background-color: azure;
+    color: black;
+    }
+    .h90 {
+    height: 90%;
+    background-color: azure;
+    color: black;
+    }
+    .BordaRelevo {
+    border-left-width : 3px;
+    border-right-width : 3px;
+    }
+    .CardStyle {
+    background-color: gainsboro;
+    border: solid 1px; 
+    border-radius: 12px;
+    }
+</style>
+
+@code
+{
+    private readonly int InitialWidth = 1800, InitialHeight = 600;
+    //  Set svg ViewPort arbitrary initial values (pixels)
+    private int svgWidth, svgHeight;  
+
+    //  Initial values in % ( for those who use Bootstrap)
+    private string svgWidthPct = "100%", svgHeightPct = "100%";                         // SvgHeightPct (%) nao está sendo usado pq o bootstrap bagunça tudo
+
+    //  Set viewbox initial values 
+    private int viewX = 0, viewY = 0, viewWidth = 0, viewHeight = 0;
+
+    //  Set flags to determine user action behavior
+    private string preservRatio = "none";
+    private bool centerViewBox  = false;    
+
+    //  Geometric figures (circles) values and Attributes 
+    int[] arrCx     = new int[50];
+    int[] arrCy     = new int[50];
+    int[] arrRx     = new int[50];
+    string[] arrCo  = new string[50];
+
+    protected override void OnInitialized()
+    {
+        svgWidth   = InitialWidth;
+        svgHeight  = InitialHeight;
+
+        //  I suggest to set initial viewbox location equal to view port
+        viewWidth  = svgWidth;
+        viewHeight = svgHeight;
+
+        rndNext();
+        base.OnInitialized();
+    }
+
+    private void SvgWidth(int value)  
+    {
+        svgWidth = value;
+        svgWidthPct = String.Format("{0:N0}%", (int)((svgWidth * 100.0) / InitialWidth) );    // Este valor (%) esta sendo usado para que o bootstrap funcione
+    }
+
+        private void SvgHeight(int value)
+    {
+        svgHeight = value;
+        svgHeightPct = String.Format("{0:N0}%", (int)((svgHeight * 100.0)/ InitialHeight) );  // Este valor (%) esta sendo calculado mas não estou usando pq o bootstrap bagunça tudo
+    }
+
+    private void ViewX( int value) => viewX = value;
+
+    private void ViewY( int value) => viewY = value;
+
+    private void ViewWidth( int value)
+    {
+        if ( centerViewBox)
+        {
+            viewX = ( svgWidth - value ) / 2 ;
+            viewWidth = value; 
+        }            
+        else
+            viewWidth = Convert.ToInt32( value);
+    }
+
+    private void ViewHeight( int value)
+    {
+        if ( centerViewBox)
+        {
+            viewY = ( svgHeight - value ) / 2 ;
+            viewHeight = value;
+        }        
+        else
+            viewHeight = value;
+    }
+
+    private void KeepProportionClicked( bool value) => preservRatio = ( value ? "" : "none");
+
+    private void CenterViewBoxClicked( bool value) => centerViewBox = value;
+    
+    private void rndNext() 
+    {   //  Color circles generator
+        Random rnd = new Random();
+
+        for ( int i = 0; i < 50; i++)
+        {
+            arrCx[i] = rnd.Next( 0, svgWidth);
+            arrCy[i] = rnd.Next( 0, svgHeight);
+            arrRx[i] = rnd.Next( 0, ( svgHeight * i) / 60);           
+            arrCo[i] = String.Format("#{0:X6}", rnd.Next(0x000000, 0xfefefe));           
+        }       
+    }
+}

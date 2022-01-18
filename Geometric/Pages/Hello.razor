@@ -1,0 +1,51 @@
+﻿@page "/HelloWorld"
+
+<div class="container-fluid d-flex flex-column align-content-center justify-content-center m-0 p-0" style="height:100%">    
+
+    <svg style="height:100%;width:100%" >   
+
+        <circle cx="50%" cy="50%" r="@raio" stroke="@strokeColor" stroke-width="@(raio *0.02)" fill="@fillCircleColor" />
+        <text x="50%" y="50%" text-anchor="middle" alignment-baseline="central" fill="@fillTextColor" font-size="@(raio*0.19)px">@Text</text>        
+ 
+    </svg>
+</div>
+
+@code {
+    //  Circle attributes
+    double raio        = 0;
+    string strokeColor = "grey";
+    string fillCircleColor = "#ff0000";
+
+    //  Text attributes
+    string fillTextColor = "";
+    string TextColor   = "#f0ffee";
+
+    //  Text banner
+    string Text = "Hello World";
+
+    protected override void OnInitialized()
+    {        
+        DrawAndExpand();
+        base.OnInitialized();
+    }
+
+    private async void DrawAndExpand()
+    {        
+        fillTextColor = TextColor;      //  Initial text color
+
+        for( int i = 1; i < 500; i++)
+        {            
+            raio += 1 ;                 //  Increment circle radius            
+            await Task.Delay(5);        //  To make a continuous progress
+            StateHasChanged();          //  To force screen refresh after each loop
+        }
+
+        //  Blink 
+        for ( int i = 1; i < 20; i++)
+        {
+            fillTextColor = (( i % 2 == 0) ? fillCircleColor : TextColor);
+            await Task.Delay(150);
+            StateHasChanged();          //  To force screen refresh after each loop
+        }
+    }
+}
