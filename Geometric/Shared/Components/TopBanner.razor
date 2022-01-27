@@ -1,14 +1,21 @@
-﻿<div class="banner d-flex flex-column align-items-center justify-content-center">
+﻿<div class="banner">
     <h5 class="m-0 p-0">@BannerTxt</h5>
     @ChildContent
 </div>
 
 <style>
     .banner {
+        /* Size */
         height: 10%;
         width : 100%;
+        /* Colors and effects */
         background-color: mediumslateblue;
         color: beige;
+        /* Inside Elements Positioning Behavior*/
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
     }
 </style>
 

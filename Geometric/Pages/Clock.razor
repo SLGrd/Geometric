@@ -21,9 +21,9 @@
             <line x1="15" y1="0" x2="16" y2="0" />
             <line x1="14" y1="0" x2="16" y2="0" />
         </g>
-        <line x1="0" y1="0" x2="8"  y2="0" class="hour"    style="transform: translate(20px, 20px) rotate(@hoursAngle)"   />
-        <line x1="0" y1="0" x2="12" y2="0" class="minute"  style="transform: translate(20px, 20px) rotate(@minutesAngle)" />
-        <line x1="0" y1="0" x2="16" y2="0" class="seconds" style="transform: translate(20px, 20px) rotate(@secondsAngle)" />
+        <line x1="0" y1="0" x2="8"  y2="0" class="hour"    style="transform: translate(20px, 20px) rotate( @hoursAngle  )"   />
+        <line x1="0" y1="0" x2="12" y2="0" class="minute"  style="transform: translate(20px, 20px) rotate( @minutesAngle)" />
+        <line x1="0" y1="0" x2="16" y2="0" class="seconds" style="transform: translate(20px, 20px) rotate( @secondsAngle)" />
         <circle cx="20" cy="20" r="0.7"    class="pin" />
     </svg>
 
@@ -37,7 +37,7 @@
       width: 600px;
       fill: white;
       stroke: black;
-      stroke-width: 0.4px;
+      stroke-width: 0.2px;
       stroke-linecap: round;
     }
     
@@ -107,27 +107,26 @@
     }
 </style>
 
-@code{  
-    string secondsAngle = $"{-90 + DateTime.Now.Second * 6}deg";
-    string minutesAngle = $"{-90 + DateTime.Now.Minute * 6}deg";
-    string hoursAngle   = $"{-90 + DateTime.Now.Hour * 30 + (DateTime.Now.Minute * 6) / 12 }deg";
-
+@code{
+    string? secondsAngle, minutesAngle, hoursAngle;   
     Timer aTimer = new();
 
     protected override void OnInitialized()
     {
+        //  First, incondicional call
+        OnTimedEvent( null, null);
+
+        //  Set timer for updating after every second
         aTimer.Elapsed += new ElapsedEventHandler( OnTimedEvent );
         aTimer.Interval = 1000;
-        aTimer.Enabled = true;
-
-        base.OnInitialized();
+        aTimer.Enabled  = true;
     }
 
     private void OnTimedEvent(object? sender, EventArgs? e)
     {
-        secondsAngle = $"{-90 + DateTime.Now.Second * 6}deg";
-        minutesAngle = $"{-90 + DateTime.Now.Minute * 6}deg";
-        hoursAngle   = $"{-90 + DateTime.Now.Hour * 30 + (DateTime.Now.Minute * 6) / 12 }deg";
+        secondsAngle = $"{-90 + DateTime.Now.Second * 6 }deg";
+        minutesAngle = $"{-90 + DateTime.Now.Minute * 6 + (DateTime.Now.Second * 6.0) / 60 }deg";   // 6.0 pra nao andar continuo.
+        hoursAngle   = $"{-90 + DateTime.Now.Hour * 30  + (DateTime.Now.Minute * 6)   / 12 }deg";
         StateHasChanged();
     }
 }
